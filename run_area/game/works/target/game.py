@@ -41,9 +41,122 @@ def game():
                 break
             data += conn.recv(1024)
         index = data.find('/hold')
-        print index
+        buf = data[0:index + 5]
+        data = data[index + 5: -1]
+        game_start(buf, pid)
+        
+        while 1:
+            while 1:
+                if data.find("/inquire") != -1:
+                    break
+                elif data.find("flop/") != -1:
+                    break
+                data += conn.recv(1024)
+            index = data.find("/inquire")
+            if index != -1:
+                buf = data[0 : index + 8]
+                data = data[index + 8 : -1]
+                print buf
+                conn.send("call")
+            
+            index = data.find("flop/")
+            if index != -1:
+                data = data[index : -1]
+                break
+
+        while 1:
+            if data.find("/flop") != -1:
+                break
+            data += conn.find(1024)
+        index = data.find("/flop")
+        buf = data[0 : index + 5]
+        data = data[index + 5 : -1]
+        print buf
 
 
+        while 1:
+            while 1:
+                if data.find("/inquire") != -1:
+                    break
+                elif data.find("turn/") != -1:
+                    break
+                data += conn.recv(1024)
+            index = data.find("/inquire")
+            if index != -1:
+                buf = data[0 : index + 8]
+                data = data[index + 8 : -1]
+                print buf
+                conn.send("call")
+            
+            index = data.find("turn/")
+            if index != -1:
+                data = data[index : -1]
+                break
+        while 1:
+            if data.find("/turn") != -1:
+                break
+            data += conn.recv(1024)
+        index = data.find("/turn")
+        buf = data[0 : index + 5]
+        data = data[index + 5 : -1]
+        print buf
+       
+
+        while 1:
+            while 1:
+                if data.find("/inquire") != -1:
+                    break
+                elif data.find("river/") != -1:
+                    break
+                data += conn.recv(1024)
+            index = data.find("/inquire")
+            if index != -1:
+                buf = data[0 : index + 8]
+                data = data[index + 8 : -1]
+                print buf
+                conn.send("call")
+            
+            index = data.find("river/")
+            if index != -1:
+                data = data[index : -1]
+                break
+        while 1:
+            if data.find("/river") != -1:
+                break
+            data += conn.recv(1024)
+        index = data.find("/river")
+        buf = data[0 : index + 6]
+        data = data[index + 6 : -1]
+        print buf
+
+        while 1:
+            while 1:
+                if data.find("/inquire") != -1:
+                    break
+                elif data.find("pot-win/") != -1:
+                    break
+                data += conn.recv(1024)
+            index = data.find("/inquire")
+            if index != -1:
+                buf = data[0 : index + 8]
+                data = data[index + 8 : -1]
+                print buf
+                conn.send("call")
+            
+            index = data.find("pot-win/")
+            if index != -1:
+                data = data[index : -1]
+                break
+
+        while 1:
+            if data.find("/pot-win") != -1:
+                break
+            data += conn.recv(1024)
+        index = data.find("/pot-win")
+        buf = data[0 : index + 8]
+        data = data[index + 8 : -1]
+        print buf
+    conn.close()
 
 
 
