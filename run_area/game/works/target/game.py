@@ -3,7 +3,6 @@
 import socket
 import sys
 import re
-import time
 
 conn = 0
 pid = 0
@@ -20,6 +19,33 @@ def get_socket():
     conn.bind((cli_ip, cli_port))
     conn.connect((ser_ip, ser_port))
     return conn, pid
+def game():
+    global conn
+    global pid
+    conn, pid = get_socket()
+    pname = "bowei"
+    eol = "\n"
+    reg_msg = "reg: %s %s %s" %(pid, pname, eol)
+
+    try:
+        conn.send(reg_msg)
+    except:
+        print("error")
+    data = ""
+    buf = ""
+    index = 0
+
+    while 1:
+        while 1:
+            if data.find("/hold") != -1:
+                break
+            data += conn.recv(1024)
+        index = data.find('/hold')
+        print index
+
+
+
+
 
 def client():
     global conn
@@ -35,21 +61,24 @@ def client():
     
     data = ""
     while 1:
-        if data.find('/hold') != -1:
-            break
-        data += conn.recv(1024)
+        while 1:
+            if data.find('/hold') != -1:
+                break
+            data += conn.recv(1024)
+            
+        game_start(data, pid)
         
-    game_start(data, pid)
-    
-    while 1:
-        try:
-            data = conn.recv(1024)
-            conn.send("call")
-        except:
-            conn.close()
-            break
-            #time.sleep(1)
-            #conn, pid = get_socket()
+        while 1:
+            try:
+                data = conn.recv(1024)
+                if data.find('/seat'):
+                    break
+                conn.send("call")
+            except:
+                conn.close()
+                break
+                #time.sleep(1)
+                #conn, pid = get_socket()
     
     conn.close()
 
@@ -81,4 +110,5 @@ def get_info(msg, info):
 
 
 if __name__ == "__main__":
-    client()
+    #client()
+    game()
